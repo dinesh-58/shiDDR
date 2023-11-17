@@ -9,5 +9,3 @@ export default {
     },
     plugins: [require("daisyui")],
 }
-
-// TODO: setup tailwind and daisyUI fully
