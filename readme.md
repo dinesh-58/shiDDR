@@ -2,6 +2,7 @@
 ```sh
 git clone
 pnpm i
+pnpm run dev
 ```
 
 Then, open `http://localhost:5173/` in your browser
@@ -11,7 +12,7 @@ Then, open `http://localhost:5173/` in your browser
 - [x] store state of both boards' pads 
 - [x] toggle state on click and show visually (toggle class to primary and secondary)
 - [ ] auto-click algorithm for bot board
-    - [ ] for now: create function that generates 3 adjacent pad numbers and console log
+    - [ ] for now: create function that generates 3 random pad numbers and console log
     - [ ] create button for running this (repurpose into "new game / next level" button later)
     - [x] don't allow player to click bot board (set disabled cursor)
 - [ ] store sequence of playerClicks in log array
@@ -28,6 +29,7 @@ Then, open `http://localhost:5173/` in your browser
 - [ ] put [this](https://daisyui.com/components/theme-controller/) in navbar
 - [ ] when bot toggles a pad, play same animation used for click
 - [ ] reminder to set cleanup f'ns for useEffect() s
+- [ ] improve bot sequence algorithm to only select adjacent pads or ones that haven't been selected?
 
 - [x] refactor `prop drilling` (setter functions for boards are being passed from App -> Board -> Pad)
     - [x] use context or merge Pad component into Board
