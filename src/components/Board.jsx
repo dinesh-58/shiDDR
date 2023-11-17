@@ -5,9 +5,11 @@ export default function Board(props) {
 
     for (let i=0; i<9; i++) {
         // might get issue for bot boards where padClick hasn't been passed
-        const btnColor = props.board[i] ? "btn-primary" : "btn-neutral" 
+        const padColor = props.board[i] ? " btn-primary" : " btn-neutral" 
+        const botPadStyle = props.boardType == "bot" ? " cursor-not-allowed no-animation" : ""
+
         padElements.push(
-            <button key={i} id={i} className={padStyles + " " + btnColor} 
+            <button key={i} id={i} className={padStyles + padColor + botPadStyle}
             onClick={
                 props.boardType == "player" ?
                 (event) => props.padClick(event, i)

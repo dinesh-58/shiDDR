@@ -6,7 +6,7 @@ export default function App() {
     function initDefaultBoard() {
         return [ false, false, false, false, false, false, false, false, false ]; 
         // 9 booleans that represent each pad's clicked state
-        // using pad index to identify for now. might push obj with id later
+        // using pad index to identify for now. might use obj having id & value later
         
         // const defaultBoard = []
     }
@@ -15,7 +15,7 @@ export default function App() {
     const [playerBoard, setPlayerBoard] = useState(initDefaultBoard);
 
     function togglePad(event, id) {
-        // event isn't used but is put here because onclick always passes it?
+        // event isn't used but is put here because onclick always passes it
         // setterFunction = isPlayerBoard ? setPlayerBoard : setBotBoard;
         // only player board for now? idk
         setPlayerBoard(prevBoard => prevBoard.map((padState, i) => 
