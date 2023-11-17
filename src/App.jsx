@@ -2,11 +2,11 @@ import { useState } from 'react'
 import Board from './components/Board.jsx'
 import './App.css'
 
-function App() {
+export default function App() {
     return (
         <main className="grid 
-                        grid-cols-1 lg:grid-cols-2 
-                    grid-rows-2 gap-8 justify-evenly">
+        grid-cols-2 
+        gap-8 justify-evenly">
             <Board id="bot-board"/>
             <Board id="player-board"/>
         </main>
@@ -17,4 +17,3 @@ function App() {
     */
 }
 
-export default App

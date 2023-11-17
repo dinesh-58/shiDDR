@@ -8,7 +8,12 @@ export default function Board(props) {
 
     return (
         <div id={props.id} className="board grid 
-        grid-cols-[repeat(3,minmax(1fr,40px))] grid-rows-[repeat(3,minmax(1fr, 40px))] justify-evenly">
+        bg-base-300
+        aspect-square
+        grid-rows-[repeat(3,minmax(30%,150px))] 
+        grid-cols-[repeat(3,minmax(30%,150px))] 
+        gap-4
+        justify-center">
             {padElements}
         </div>
     )
