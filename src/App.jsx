@@ -15,20 +15,20 @@ export default function App() {
     const [playerBoard, setPlayerBoard] = useState(initDefaultBoard);
 
     function togglePad(event, id) {
+        // event isn't used but is put here because onclick always passes it?
         // setterFunction = isPlayerBoard ? setPlayerBoard : setBotBoard;
         // only player board for now? idk
         setPlayerBoard(prevBoard => prevBoard.map((padState, i) => 
             i === id ? !padState : padState
         ))
-        console.log("pad clicked")
     }
 
     return (
         <main className="grid 
         grid-cols-2 
         gap-8 justify-evenly">
-            <Board boardType="bot"/>
-            <Board boardType="player" padClick={togglePad}/>
+            <Board boardType="bot" board={botBoard} />
+            <Board boardType="player" board={playerBoard} padClick={togglePad}/>
         </main>
     )
     /* TODO: 
