@@ -18,9 +18,20 @@ export default function App() {
         // event isn't used but is put here because onclick always passes it
         // setterFunction = isPlayerBoard ? setPlayerBoard : setBotBoard;
         // only player board for now? idk
-        setPlayerBoard(prevBoard => prevBoard.map((padState, i) => 
+        setPlayerBoard(playerBoard.map((padState, i) => 
             i === id ? !padState : padState
         ))
+    }
+
+    function generateBotSequence() {
+        const sequence = [];
+        while(sequence.length < 3) {
+            const randomId = Math.round(Math.random() * 8);
+            if (! sequence.includes(randomId)) sequence.push(randomId)
+        }
+        setBotBoard(botBoard.map((padState, i) => 
+            sequence.includes(i) ? true : false
+        ));
     }
 
     return (
@@ -29,6 +40,10 @@ export default function App() {
         gap-8 justify-evenly">
             <Board boardType="bot" board={botBoard} />
             <Board boardType="player" board={playerBoard} padClick={togglePad}/>
+            <button className="btn btn-primary"
+            onClick={generateBotSequence}
+        >
+        New game</button>
         </main>
     )
     /* TODO: 
