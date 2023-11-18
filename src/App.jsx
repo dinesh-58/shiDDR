@@ -23,9 +23,9 @@ export default function App() {
     function togglePad(id) {
         // setterFunction = isPlayerBoard ? setPlayerBoard : setBotBoard;
         // only player board for now? idk
-        setPlayerBoard(playerBoard.map((padState, i) => 
-            i === id ? !padState : padState
-        ))
+        setPlayerBoard(prevPlayerBoard => {
+            return prevPlayerBoard.map((padState, i) => i === id ? !padState : padState)
+        })
     }
 
     function handlePlayerClick(event, id) {
@@ -51,10 +51,11 @@ export default function App() {
         //     const randomId = Math.round(Math.random() * 8);
         //     if (! sequence.includes(randomId)) sequence.push(randomId)
         // }
-        setBotBoard(botBoard.map((padState, i) => 
-            sequence.includes(i) ? true : false
-        ));
+        setBotBoard(prevBotBoard => {
+            return prevBotBoard.map((padState, i) => sequence.includes(i) ? true : false)
+        });
         // gonna have to use additional logic later for setting bot sequence based on prev value
+            // remember to use callback f'n to get up to date state
         setBotSequence(sequence);
     }
 
