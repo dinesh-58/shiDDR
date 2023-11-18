@@ -18,8 +18,13 @@ Then, open `http://localhost:5173/` in your browser
 - [x] ensure generated sequnce doesn't have duplicate numbers
 - [x] toggle bot pads based on generated sequence
 
-- [ ] store sequence of playerClicks in log array
-    - [ ] compare with bot sequence and store result as winState (clicks must be exact order. console log bot seqeunce for now and check)
+- [ ] compare player click with botSequence
+    - [x] generate only one id for botSequence for now
+    - [ ] keep generating until full, no need to compare player click for now
+    - [ ] shift() from botSequence (i.e. remove oldest pad in botSequence) regardless if player click was right or wrong 
+        - [ ] ?? toggle shifted pad?
+            - [ ] for now, keep doing till bot board is fully enabled
+        - [ ] ?? toggle player's clicked pad? because bot might generate previously generated pad that it has disabled but player may still have enabled (need to maintain visual consistency and also, I might compare pad states, not just pad id)
 
 - [ ] when bot toggles a pad, play same animation used for click (use setTimeout to show slowly)
 - [ ] host on gh-pages when you're able to play just 1 round w/ bot
