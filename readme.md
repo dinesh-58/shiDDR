@@ -1,6 +1,6 @@
 ## Running locally
 ```sh
-git clone
+git clone https://github.com/dinesh-58/shiDDR
 pnpm i
 pnpm run dev
 ```
