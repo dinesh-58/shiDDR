@@ -20,7 +20,9 @@ Then, open `http://localhost:5173/` in your browser
 
 - [ ] compare player click with botSequence
     - [x] generate only one id for botSequence for now
-    - [ ] keep generating until full, no need to compare player click for now (use interval)
+    - [x] keep generating until full, no need to compare player click for now (use interval)
+        - [ ] fix bug when starting new game while interval is currently running
+        - [ ] fix delay of interval taking 2 seconds to enable a pad (caused due to duplicate generation). maybe filter botState or use timeout instead of interval? idk
     - [ ] shift() from botSequence (i.e. remove oldest pad in botSequence) regardless if player click was right or wrong 
         - [ ] ?? toggle shifted pad?
             - [ ] for now, keep doing till bot board is fully enabled

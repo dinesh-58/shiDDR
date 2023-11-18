@@ -12,8 +12,6 @@ export default function App() {
         return [ false, false, false, false, false, false, false, false, false ]; 
         // 9 booleans that represent each pad's clicked state
         // using pad index to identify for now. might use obj having id & value later
-        
-        // const defaultBoard = []
     }
 
     const [botBoard, setBotBoard] = useState(initDefaultBoard);
@@ -43,20 +41,30 @@ export default function App() {
     function generateBotSequence() {
         const sequence = [];
 
-        // generate only one for now
-        sequence.push(Math.round(Math.random() * 8));
-
+        const intervalId = setInterval(() => {
+            // generate pad id & set state, etc.. accordingly
+            if(sequence.length < 9) {
+                const randomId = Math.round(Math.random() * 8);
+                console.log(randomId)
+                if (! sequence.includes(randomId)) {
+                    sequence.push(randomId)   // only use unique ids
+                    setBotBoard(prevBotBoard => {
+                        return prevBotBoard.map((padState, i) => sequence.includes(i) ? true : false)
+                    });
+                }
+                // gonna have to use additional logic later for setting bot sequence based on prev value
+                // remember to use callback f'n to get up to date state
+                setBotSequence(sequence);
+            } else clearInterval(intervalId);
+        },1000);
+            // bug if new game is started while interval is running
+                // idk, maybe set state for interval id & when new game started,  clearInteral as well as set previous id to null 
+        
         // this generates 3 unique pad ids
         // while(sequence.length < 3) {
         //     const randomId = Math.round(Math.random() * 8);
         //     if (! sequence.includes(randomId)) sequence.push(randomId)
         // }
-        setBotBoard(prevBotBoard => {
-            return prevBotBoard.map((padState, i) => sequence.includes(i) ? true : false)
-        });
-        // gonna have to use additional logic later for setting bot sequence based on prev value
-            // remember to use callback f'n to get up to date state
-        setBotSequence(sequence);
     }
 
     return (
