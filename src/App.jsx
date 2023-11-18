@@ -17,6 +17,7 @@ export default function App() {
     const [botBoard, setBotBoard] = useState(initDefaultBoard);
     const [playerBoard, setPlayerBoard] = useState(initDefaultBoard);
     const [botSequence, setBotSequence] = useState([])
+    const [sequenceIntervalId, setSequenceIntervalId] = useState(null)
 
     function togglePad(id) {
         // setterFunction = isPlayerBoard ? setPlayerBoard : setBotBoard;
@@ -38,33 +39,47 @@ export default function App() {
         // playerBoard[id] == botBoard
     }
 
-    function generateBotSequence() {
-        const sequence = [];
 
-        const intervalId = setInterval(() => {
-            // generate pad id & set state, etc.. accordingly
-            if(sequence.length < 9) {
-                const randomId = Math.round(Math.random() * 8);
-                console.log(randomId)
-                if (! sequence.includes(randomId)) {
-                    sequence.push(randomId)   // only use unique ids
-                    setBotBoard(prevBotBoard => {
-                        return prevBotBoard.map((padState, i) => sequence.includes(i) ? true : false)
-                    });
-                }
-                // gonna have to use additional logic later for setting bot sequence based on prev value
-                // remember to use callback f'n to get up to date state
-                setBotSequence(sequence);
-            } else clearInterval(intervalId);
-        },1000);
-            // bug if new game is started while interval is running
-                // idk, maybe set state for interval id & when new game started,  clearInteral as well as set previous id to null 
-        
-        // this generates 3 unique pad ids
-        // while(sequence.length < 3) {
-        //     const randomId = Math.round(Math.random() * 8);
-        //     if (! sequence.includes(randomId)) sequence.push(randomId)
-        // }
+    function generateBotSequence() {
+        if(botSequence.length < 9) {   // all pads in board aren't enabled yet
+            const randomId = Math.round(Math.random() * 8);
+            console.table(randomId, sequenceIntervalId)
+            if(botSequence.includes(randomId)) {  
+                /*
+                    * only use unique ids (pads that haven't been enabled yet)
+                    * if non-unique is generated, setInterval in botSequenceLoop will 
+                    * only generate another id after 1 more second 
+                    * (because it runs every second regardless of generated id)
+                    * takes longer for bot to enable new pad as game progresses
+                    * so call this function recursively so that a pad might be selected instantly
+                */
+                generateBotSequence();   
+            }
+            else {
+                setBotSequence(prevBotSequence => [...prevBotSequence, randomId])
+                console.log({botSequence})
+                setBotBoard(prevBotBoard => {
+                    return prevBotBoard.map((padState, i) => botSequence.includes(i) ? true : false)
+                });
+            }
+        } else stopSequenceLoop()
+    }
+
+    function stopSequenceLoop() {
+        clearInterval(sequenceIntervalId);
+        setSequenceIntervalId(null)
+    }
+
+    function botSequenceLoop() {
+        if(sequenceIntervalId !== null) { // previous loop is running so stop it
+            stopSequenceLoop()
+        }
+        else {
+            // generates new sequence every second. 
+            // setInterval returns id which is used to stop loop (using clearInteral) in generateBotSequence
+            const intervalId = setInterval(generateBotSequence, 1000);  
+            console.log({intervalId})
+        }
     }
 
     return (
@@ -74,7 +89,7 @@ export default function App() {
             <Board boardType="bot" board={botBoard} />
             <Board boardType="player" board={playerBoard} padClick={handlePlayerClick}/>
             <button className="btn btn-primary"
-            onClick={generateBotSequence}
+            onClick={botSequenceLoop}
         >
         New game</button>
         </main>

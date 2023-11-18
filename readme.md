@@ -23,6 +23,8 @@ Then, open `http://localhost:5173/` in your browser
     - [x] keep generating until full, no need to compare player click for now (use interval)
         - [ ] fix bug when starting new game while interval is currently running
         - [ ] fix delay of interval taking 2 seconds to enable a pad (caused due to duplicate generation). maybe filter botState or use timeout instead of interval? idk
+            - [ ] tried fixing above 2 but now interval doesn't stop.
+                  also, react dev tools shows state is properly set but console log doesn't log properly? 
     - [ ] shift() from botSequence (i.e. remove oldest pad in botSequence) regardless if player click was right or wrong 
         - [ ] ?? toggle shifted pad?
             - [ ] for now, keep doing till bot board is fully enabled
