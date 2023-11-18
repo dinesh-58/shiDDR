@@ -25,10 +25,15 @@ export default function App() {
 
     function generateBotSequence() {
         const sequence = [];
-        while(sequence.length < 3) {
-            const randomId = Math.round(Math.random() * 8);
-            if (! sequence.includes(randomId)) sequence.push(randomId)
-        }
+
+        // generate only one for now
+        sequence.push(Math.round(Math.random() * 8));
+
+        // this generates 3 unique pad ids
+        // while(sequence.length < 3) {
+        //     const randomId = Math.round(Math.random() * 8);
+        //     if (! sequence.includes(randomId)) sequence.push(randomId)
+        // }
         setBotBoard(botBoard.map((padState, i) => 
             sequence.includes(i) ? true : false
         ));
