@@ -1,23 +1,30 @@
 export default function Board(props) {
     // putting here because button hover effects don't work properly if these are put in css file
     const padStyles = "btn h-auto max-h-full max-w-full aspect-square";
+    const botPadStyle = props.boardType == "bot" ? " cursor-not-allowed no-animation" : ""
     const padElements = [];
 
-    for (let i=0; i<9; i++) {
-        // might get issue for bot boards where padClick hasn't been passed
-        const padColor = props.board[i] ? " btn-primary" : " btn-neutral" 
-        const botPadStyle = props.boardType == "bot" ? " cursor-not-allowed no-animation" : ""
+    try {
+        
+        for (let i=0; i<9; i++) {
+            // might get issue for bot boards where padClick hasn't been passed
+            const padColor = props.board[i].isEnabled ? " btn-primary" : " btn-neutral" 
 
-        padElements.push(
-            <button key={i} id={i} className={padStyles + padColor + botPadStyle}
-            onClick={
-                props.boardType == "player" ?
-                (event) => props.padClick(event, i)
-                : undefined
-            }>
-            </button>
-        );
-        // padElements.push(<Pad key={i} id={i} />)
+            padElements.push(
+                <button key={i} id={i} className={padStyles + padColor + botPadStyle}
+                onClick={
+                    props.boardType == "player" ?
+                    (event) => props.padClick(event, i)
+                    : undefined
+                }>
+                </button>
+            );
+            // padElements.push(<Pad key={i} id={i} />)
+        }
+    } catch (error) {
+        console.log("custom error:" + error)
+        console.log(props)
+        //debugger;
     }
 
     return (
