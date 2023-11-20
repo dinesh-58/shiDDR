@@ -24,12 +24,14 @@ export default function Playground(props) {
     const botSequenceRef = useRef([]);
     const sequenceIntervalId = useRef(null)
 
+    /* ref is used to store latest botSequence state. 
+        * this is because setInterval will use initial value of botSequence and pass that to functions called by it
+        * so instead of using botSequence, use botSequenceRef in those functions
+    */
+
+
     useEffect(() => {
-        botSequenceRef.current = botSequence;
-        /* ref is used to store latest botSequence state. 
-            * this is because setInterval will use initial value of botSequence and pass that to functions called by it
-            * so instead of using botSequence, use botSequenceRef in those functions
-        */
+        botSequenceRef.current = [...botSequence];
     }, [botSequence]);
 
 
@@ -65,25 +67,26 @@ export default function Playground(props) {
         if(botSequenceRef.current.length < 9) {   // all pads in board aren't enabled yet
 
             // only generate unique ids (pads that haven't been enabled yet)
-                // after implementing, there should be no need to check if botSequence includes randomly generated id
             
             const selectablePads = botBoardRef.current.filter(pad => !pad.isEnabled);
             const randomSelection = Math.round(Math.random() * (selectablePads.length - 1));
             const selectedId = selectablePads[randomSelection].padId;
-            // TODO: no need to loop, just enable only for selectedId ?
 
-                    botSequenceRef.current.push(selectedId);
-                    setBotSequence(botSequenceRef.current)
+            botSequenceRef.current.push(selectedId);
+            setBotSequence([...botSequenceRef.current])
 
-                    console.group("loop")
-                    console.log("botSequence: ", botSequence)
-                    console.log("botSequence: ", botSequenceRef.current)
-                    console.groupEnd("loop")
-                    botBoardRef.current[selectedId] = {
-                        ...botBoardRef.current[selectedId],
-                        isEnabled: true
-                    }
-                    setBotBoard(botBoardRef.current)
+            console.groupCollapsed("loop")
+            console.log("botSequence: ", botSequence)
+            console.log("botSequenceRef: ", botSequenceRef.current)
+            console.log("botBoard: ", botBoard)
+            console.log("botBoardRef: ", botBoardRef.current)
+            console.groupEnd("loop")
+
+            botBoardRef.current[selectedId] = {
+                ...botBoardRef.current[selectedId],
+                isEnabled: true
+            }
+            setBotBoard([...botBoardRef.current])
         } else stopSequenceLoop()
     }
 
@@ -93,15 +96,15 @@ export default function Playground(props) {
     }
 
     function botSequenceLoop() {
-        props.resetGame();
         if(sequenceIntervalId.current !== null) { // previous loop is running so stop it and reset everything
             stopSequenceLoop()
         }
-            // generates new sequence every second. 
-            // setInterval returns id which is used to stop loop (using clearInteral) in generateBotSequence
-            const intervalId = setInterval(generateBotSequence, 1000);  
-            console.log("intervalId: " + intervalId)
-            sequenceIntervalId.current = intervalId
+        props.resetGame();
+        // generates new sequence every second. 
+        // setInterval returns id which is used to stop loop (using clearInteral) in generateBotSequence
+        const intervalId = setInterval(generateBotSequence, 1000);  
+        console.log("intervalId: " + intervalId)
+        sequenceIntervalId.current = intervalId
     }
     return (
         <main className="grid grid-cols-2 gap-8 justify-evenly">
