@@ -59,6 +59,13 @@ export default function App() {
         if(id == botSequenceRef.current[0] && (playerBoardRef.current[id].isEnabled != botBoardRef.current[id].isEnabled)) {
             togglePad(id); 
             console.log("correct")
+            setTimeout(() => {
+                togglePad(id)
+                // TODO: toggle botpad with same id too 
+            }, 200)
+
+            // TODO: try changing color by disabling and enabling 1st 
+            // then, using dom manipulation if that doesn't work
         }
         else {
             // decrease remaining lives
@@ -79,7 +86,7 @@ export default function App() {
             // only generate unique ids (pads that haven't been enabled yet)
             
             const selectablePads = botBoardRef.current.filter(pad => !pad.isEnabled);
-            const randomSelection = Math.round(Math.random() * (selectablePads.length - 1));
+            const randomSelection = Math.floor(Math.random() * selectablePads.length);
             const selectedId = selectablePads[randomSelection].padId;
 
             botSequenceRef.current.push(selectedId);
