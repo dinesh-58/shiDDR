@@ -31,11 +31,13 @@ export default function Playground(props) {
 
 
     useEffect(() => {
+        console.log("botSequence change detected: ", botSequence)
         botSequenceRef.current = [...botSequence];
     }, [botSequence]);
 
 
     useEffect(() => {
+        console.log("botBoard change detected: ", botBoard)
         botBoardRef.current = [...botBoard]
     }, [botBoard]);
 
@@ -77,9 +79,9 @@ export default function Playground(props) {
 
             console.groupCollapsed("loop")
             console.log("botSequence: ", botSequence)
-            console.log("botSequenceRef: ", botSequenceRef.current)
+            console.log("botSequenceRef: ", [...botSequenceRef.current])
             console.log("botBoard: ", botBoard)
-            console.log("botBoardRef: ", botBoardRef.current)
+            console.log("botBoardRef: ", [...botBoardRef.current])
             console.groupEnd("loop")
 
             botBoardRef.current[selectedId] = {
