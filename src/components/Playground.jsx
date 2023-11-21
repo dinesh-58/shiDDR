@@ -19,22 +19,14 @@ export default function Playground(props) {
 
     const [botBoard, setBotBoard] = useState(initDefaultBoard);
     const [playerBoard, setPlayerBoard] = useState(initDefaultBoard);
-    const [botSequence, setBotSequence] = useState([])
     const botBoardRef = useRef([])
-    const botSequenceRef = useRef([]);
+    const botSequence = useRef([]);
     const sequenceIntervalId = useRef(null)
 
-    /* ref is used to store latest botSequence state. 
-        * this is because setInterval will use initial value of botSequence and pass that to functions called by it
-        * so instead of using botSequence, use botSequenceRef in those functions
+    /* ref is used to store latest botBoard state. 
+        * this is because setInterval will use initial value of botBoard and pass that to functions called by it
+        * so instead of using botBoard, use botBoardRef in those functions
     */
-
-
-    useEffect(() => {
-        console.log("botSequence change detected: ", botSequence)
-        botSequenceRef.current = [...botSequence];
-    }, [botSequence]);
-
 
     useEffect(() => {
         console.log("botBoard change detected: ", botBoard)
@@ -66,7 +58,7 @@ export default function Playground(props) {
 
     function generateBotSequence() {
         // TODO: use refs in all functions that are called (directly or indirectly) by setInterval
-        if(botSequenceRef.current.length < 9) {   // all pads in board aren't enabled yet
+        if(botSequence.current.length < 9) {   // all pads in board aren't enabled yet
 
             // only generate unique ids (pads that haven't been enabled yet)
             
@@ -74,12 +66,10 @@ export default function Playground(props) {
             const randomSelection = Math.round(Math.random() * (selectablePads.length - 1));
             const selectedId = selectablePads[randomSelection].padId;
 
-            botSequenceRef.current.push(selectedId);
-            setBotSequence([...botSequenceRef.current])
+            botSequence.current.push(selectedId);
 
             console.groupCollapsed("loop")
-            console.log("botSequence: ", botSequence)
-            console.log("botSequenceRef: ", [...botSequenceRef.current])
+            console.log("botSequence: ", [...botSequence.current])
             console.log("botBoard: ", botBoard)
             console.log("botBoardRef: ", [...botBoardRef.current])
             console.groupEnd("loop")
@@ -101,7 +91,8 @@ export default function Playground(props) {
         if(sequenceIntervalId.current !== null) { // previous loop is running so stop it and reset everything
             stopSequenceLoop()
         }
-        props.resetGame();
+        props.resetGame();  // TODO: manually clear everything? (botBoard, botSequence & sequenceIntervalIdintervalId)
+
         // generates new sequence every second. 
         // setInterval returns id which is used to stop loop (using clearInteral) in generateBotSequence
         const intervalId = setInterval(generateBotSequence, 1000);  
