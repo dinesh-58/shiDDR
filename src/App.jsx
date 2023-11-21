@@ -22,7 +22,8 @@ export default function App() {
     const [botBoard, setBotBoard] = useState(initDefaultBoard);
     const [playerBoard, setPlayerBoard] = useState(initDefaultBoard);
     const botBoardRef = useRef([])
-    const botSequence = useRef([]);
+    const playerBoardRef = useRef([])
+    const botSequenceRef = useRef([]);
     const sequenceIntervalId = useRef(null)
 
     /* ref is used to store latest botBoard state. 
@@ -34,6 +35,11 @@ export default function App() {
         console.log("botBoard change detected: ", botBoard)
         botBoardRef.current = [...botBoard]
     }, [botBoard]);
+
+    useEffect(() => {
+        console.log("playerBoard change detected: ", playerBoard)
+        playerBoardRef.current = [...playerBoard]
+    }, [playerBoard]);
 
     function togglePad(id) {
         // only player board for now? idk
@@ -48,19 +54,27 @@ export default function App() {
     function handlePlayerClick(event, id) {
         // event isn't used but is put here because onclick always passes it
             // could use even.target.id later if I decide to store board as array of objects
-        togglePad(id);
         // check if clicked pad matches bot generated pad
         
-        if(id == botSequence[0]) console.log("correct")
-        else console.log("wrong")
-        // check state of board as well? i.e. both player and bot are enabled/disabled at clicked spot
-        // playerBoard[id] == botBoard
+        if(id == botSequenceRef.current[0] && (playerBoardRef.current[id].isEnabled != botBoardRef.current[id].isEnabled)) {
+            togglePad(id); 
+            console.log("correct")
+        }
+        else {
+            // decrease remaining lives
+            console.log("wrong")
+        }
+        botSequenceRef.current.shift()
     }
 
 
     function generateBotSequence() {
         // TODO: use refs in all functions that are called (directly or indirectly) by setInterval
-        if(botSequence.current.length < 9) {   // all pads in board aren't enabled yet
+        if(botSequenceRef.current.length < 9) {   // all pads in board aren't enabled yet
+            /* TODO: might cause infinite loop here when all pads are clicked. 
+                * botSequenceRef length will decrease as player clicks but pads will not be disabled
+                * implement disabling logic later
+            */
 
             // only generate unique ids (pads that haven't been enabled yet)
             
@@ -68,10 +82,10 @@ export default function App() {
             const randomSelection = Math.round(Math.random() * (selectablePads.length - 1));
             const selectedId = selectablePads[randomSelection].padId;
 
-            botSequence.current.push(selectedId);
+            botSequenceRef.current.push(selectedId);
 
             console.groupCollapsed("loop")
-            console.log("botSequence: ", [...botSequence.current])
+            console.log("botSequenceRef: ", [...botSequenceRef.current])
             console.log("botBoard: ", botBoard)
             console.log("botBoardRef: ", [...botBoardRef.current])
             console.groupEnd("loop")
@@ -87,7 +101,7 @@ export default function App() {
                 return prevBotBoard.map(pad => {
                     return { 
                         ...pad,
-                        isEnabled: botSequence.current.includes(pad.id)
+                        isEnabled: botSequenceRef.current.includes(pad.id)
                     }
                 })
             });
@@ -104,7 +118,7 @@ export default function App() {
         if(sequenceIntervalId.current !== null) { // previous loop is running so stop it and reset everything
             stopSequenceLoop()
         }
-        // TODO: manually clear everything? (botBoard, botSequence & sequenceIntervalIdintervalId)
+        // TODO: manually clear everything? (botBoard, botSequenceRef & sequenceIntervalIdintervalId)
 
         // generates new sequence every second. 
         // setInterval returns id which is used to stop loop (using clearInteral) in generateBotSequence
@@ -112,6 +126,7 @@ export default function App() {
         console.log("intervalId: " + intervalId)
         sequenceIntervalId.current = intervalId
     }
+
     return (
         <>
             <nav>Placeholder nav</nav>
