@@ -79,6 +79,17 @@ export default function Playground(props) {
                 isEnabled: true
             }
             setBotBoard([...botBoardRef.current])
+
+            /*
+            setBotBoard(prevBotBoard => {
+                return prevBotBoard.map(pad => {
+                    return { 
+                        ...pad,
+                        isEnabled: botSequence.current.includes(pad.id)
+                    }
+                })
+            });
+            */
         } else stopSequenceLoop()
     }
 
