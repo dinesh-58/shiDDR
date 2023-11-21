@@ -41,11 +41,10 @@ export default function App() {
         playerBoardRef.current = [...playerBoard]
     }, [playerBoard]);
 
-    function togglePad(id) {
-        // only player board for now? idk
-        // setterFunction = isPlayerBoard ? setPlayerBoard : setBotBoard; // might use something like this later
-        setPlayerBoard(prevPlayerBoard => {
-            return prevPlayerBoard.map(pad => {
+    function togglePad(id, isPlayerBoard) {
+        const setterFunction = isPlayerBoard ? setPlayerBoard : setBotBoard; // might use something like this later
+        setterFunction(prevBoard => {
+            return prevBoard.map(pad => {
                 return pad.padId === id ? { ...pad, isEnabled: !pad.isEnabled } : pad
             })
         })
@@ -60,8 +59,9 @@ export default function App() {
             togglePad(id); 
             console.log("correct")
             setTimeout(() => {
-                togglePad(id)
-                // TODO: toggle botpad with same id too 
+                // debugger
+                togglePad(id, true)
+                togglePad(id, false) // toggle bot board. this toggles but then another function somewhere re-toggles
             }, 200)
 
             // TODO: try changing color by disabling and enabling 1st 
