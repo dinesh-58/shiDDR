@@ -19,7 +19,6 @@ export default function Board(props) {
                 }>
                 </button>
             );
-            // padElements.push(<Pad key={i} id={i} />)
         }
     } catch (error) {
         console.log("custom error:" + error)
