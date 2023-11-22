@@ -24,6 +24,8 @@ export default function App() {
     const botSequenceRef = useRef([]);
     const sequenceIntervalId = useRef(null)
     const [botSequenceState, setBotSequenceState] = useState([])
+    const [score, setScore] = useState(0)
+    const [lives, setLives] = useState(3)
 
     /* ref is used to store latest Board state. 
         * this is because setInterval will use initial value of botBoard and pass that to functions called by it
@@ -50,6 +52,7 @@ export default function App() {
         
         if(id == botSequenceRef.current[0] && (playerBoardRef.current[id].isEnabled != true)) {
             togglePad(id);  // enable pad
+            setScore(prevScore => prevScore + 1);
             console.log("correct")
             setTimeout(() => {
                 // debugger
@@ -94,21 +97,27 @@ export default function App() {
 
         // generates new sequence every second. 
         // setInterval returns id which is used to stop loop (using clearInteral) in generateBotSequence
-        const intervalId = setInterval(generateBotSequence, 1000);  
+        const intervalId = setInterval(generateBotSequence, 1500);  
         console.log("intervalId: " + intervalId)
         sequenceIntervalId.current = intervalId
     }
 
     const botSequenceElements = botSequenceState.map((padId, i) => {
-        return (<li key={i}>
-                    {i == (botSequenceState.length - 1) ? padId + 1 : 'X'}
-                </li>)
+        return (
+            <li key={i}>
+                {i == (botSequenceState.length - 1) ? padId + 1 : 'X'}
+            </li>
+        )
     })
 
     return (
-        <div id="App" className="flex max-h-screen flex-col max-w-[80%] mx-auto items-center">
+        <div id="App" className="flex max-h-screen flex-col max-w-[80%] sm:max-w-[480px] mx-auto items-center">
             <nav>Placeholder nav</nav>
-            <ul className="flex h-8">{botSequenceElements}</ul>
+            <h3>Score: {score}</h3>
+            <ul className="flex self-start h-8 w-1/3 gap-4 [&>*]:block">
+                <span>Sequence: </span>
+                {botSequenceElements}
+            </ul>
             <main className="flex flex-col gap-4 justify-evenly">
                 <Board boardType="player" board={playerBoard} padClick={handlePlayerClick}/>
                 <button className="btn btn-primary"
