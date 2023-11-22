@@ -23,6 +23,7 @@ export default function App() {
     const playerBoardRef = useRef([])
     const botSequenceRef = useRef([]);
     const sequenceIntervalId = useRef(null)
+    const [botSequenceState, setBotSequenceState] = useState([])
 
     /* ref is used to store latest Board state. 
         * this is because setInterval will use initial value of botBoard and pass that to functions called by it
@@ -48,15 +49,12 @@ export default function App() {
         // check if clicked pad matches bot generated pad
         
         if(id == botSequenceRef.current[0] && (playerBoardRef.current[id].isEnabled != true)) {
-            togglePad(id); 
+            togglePad(id);  // enable pad
             console.log("correct")
             setTimeout(() => {
                 // debugger
-                togglePad(id) // disable after 200 ms
+                togglePad(id) // disable pad after 200 ms to achieve blink effect
             }, 200)
-
-            // TODO: try changing color by disabling and enabling 1st 
-            // then, using dom manipulation if that doesn't work
         }
         else {
             // decrease remaining lives
@@ -69,26 +67,17 @@ export default function App() {
     function generateBotSequence() {
         // TODO: use refs in all functions that are called (directly or indirectly) by setInterval
         if(botSequenceRef.current.length < 5) {   
-            /* TODO: might cause infinite loop here when all pads are clicked. 
-                * botSequenceRef length will decrease as player clicks but pads will not be disabled
-                * implement disabling logic later
-            */
 
-            // only generate unique ids (pads that haven't been enabled yet)
-            
-            const selectablePads = playerBoardRef.current.filter(pad => !pad.isEnabled && !botSequenceRef.current.includes(pad.padId));
+            // only generate unique ids (pads that haven't been enabled yet & aren't in botSequenceRef)
+            const selectablePads = playerBoardRef.current.filter(pad => {
+                return !pad.isEnabled && !botSequenceRef.current.includes(pad.padId);
+            });
             const randomSelection = Math.floor(Math.random() * selectablePads.length);
             const selectedId = selectablePads[randomSelection].padId;
 
             botSequenceRef.current.push(selectedId);
-            console.log(botSequenceRef.current.at(-1))
-
-            console.groupCollapsed("loop")
-            console.log("botSequenceRef: ", [...botSequenceRef.current])
-            console.groupEnd("loop")
-
-            // TODO: display latest botSequence number in DOM
-
+            setBotSequenceState([...botSequenceRef.current]) // this is just to cause rerender and show new numbers in DOM
+            console.log("botSequenceRef: ", [...botSequenceRef.current])  // TODO: remove this log later.
         } else stopSequenceLoop()
     }
 
@@ -110,17 +99,16 @@ export default function App() {
         sequenceIntervalId.current = intervalId
     }
 
-    const botSequenceElements = botSequenceRef.current.map((padId, i) => {
-        // TODO: trigger re-render here. move to above generateBotSequence? or use some sort of state or useEffect. need to think
+    const botSequenceElements = botSequenceState.map((padId, i) => {
         return (<li key={i}>
-                    {i == (botSequenceRef.current.length - 1) ? padId : 'X'}
+                    {i == (botSequenceState.length - 1) ? padId + 1 : 'X'}
                 </li>)
     })
 
     return (
         <div id="App" className="flex max-h-screen flex-col max-w-[80%] mx-auto items-center">
             <nav>Placeholder nav</nav>
-            <ul></ul>
+            <ul className="flex h-8">{botSequenceElements}</ul>
             <main className="flex flex-col gap-4 justify-evenly">
                 <Board boardType="player" board={playerBoard} padClick={handlePlayerClick}/>
                 <button className="btn btn-primary"
