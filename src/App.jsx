@@ -19,31 +19,23 @@ export default function App() {
         return board;
     }
 
-    const [botBoard, setBotBoard] = useState(initDefaultBoard);
     const [playerBoard, setPlayerBoard] = useState(initDefaultBoard);
-    const botBoardRef = useRef([])
     const playerBoardRef = useRef([])
     const botSequenceRef = useRef([]);
     const sequenceIntervalId = useRef(null)
 
-    /* ref is used to store latest botBoard state. 
+    /* ref is used to store latest Board state. 
         * this is because setInterval will use initial value of botBoard and pass that to functions called by it
-        * so instead of using botBoard, use botBoardRef in those functions
+        * so instead of using playerBoard, use playerBoardRef in those functions
     */
-
-    useEffect(() => {
-        console.log("botBoard change detected: ", botBoard)
-        botBoardRef.current = [...botBoard]
-    }, [botBoard]);
 
     useEffect(() => {
         console.log("playerBoard change detected: ", playerBoard)
         playerBoardRef.current = [...playerBoard]
     }, [playerBoard]);
 
-    function togglePad(id, isPlayerBoard) {
-        const setterFunction = isPlayerBoard ? setPlayerBoard : setBotBoard; // might use something like this later
-        setterFunction(prevBoard => {
+    function togglePad(id) {
+        setPlayerBoard(prevBoard => {
             return prevBoard.map(pad => {
                 return pad.padId === id ? { ...pad, isEnabled: !pad.isEnabled } : pad
             })
@@ -55,13 +47,12 @@ export default function App() {
             // could use even.target.id later if I decide to store board as array of objects
         // check if clicked pad matches bot generated pad
         
-        if(id == botSequenceRef.current[0] && (playerBoardRef.current[id].isEnabled != botBoardRef.current[id].isEnabled)) {
+        if(id == botSequenceRef.current[0] && (playerBoardRef.current[id].isEnabled != true)) {
             togglePad(id); 
             console.log("correct")
             setTimeout(() => {
                 // debugger
-                togglePad(id, true)
-                togglePad(id, false) // toggle bot board. this toggles but then another function somewhere re-toggles
+                togglePad(id) // disable after 200 ms
             }, 200)
 
             // TODO: try changing color by disabling and enabling 1st 
@@ -77,7 +68,7 @@ export default function App() {
 
     function generateBotSequence() {
         // TODO: use refs in all functions that are called (directly or indirectly) by setInterval
-        if(botSequenceRef.current.length < 9) {   // all pads in board aren't enabled yet
+        if(botSequenceRef.current.length < 5) {   
             /* TODO: might cause infinite loop here when all pads are clicked. 
                 * botSequenceRef length will decrease as player clicks but pads will not be disabled
                 * implement disabling logic later
@@ -85,34 +76,19 @@ export default function App() {
 
             // only generate unique ids (pads that haven't been enabled yet)
             
-            const selectablePads = botBoardRef.current.filter(pad => !pad.isEnabled);
+            const selectablePads = playerBoardRef.current.filter(pad => !pad.isEnabled && !botSequenceRef.current.includes(pad.padId));
             const randomSelection = Math.floor(Math.random() * selectablePads.length);
             const selectedId = selectablePads[randomSelection].padId;
 
             botSequenceRef.current.push(selectedId);
+            console.log(botSequenceRef.current.at(-1))
 
             console.groupCollapsed("loop")
             console.log("botSequenceRef: ", [...botSequenceRef.current])
-            console.log("botBoard: ", botBoard)
-            console.log("botBoardRef: ", [...botBoardRef.current])
             console.groupEnd("loop")
 
-            botBoardRef.current[selectedId] = {
-                ...botBoardRef.current[selectedId],
-                isEnabled: true
-            }
-            setBotBoard([...botBoardRef.current])
+            // TODO: display latest botSequence number in DOM
 
-            /*
-            setBotBoard(prevBotBoard => {
-                return prevBotBoard.map(pad => {
-                    return { 
-                        ...pad,
-                        isEnabled: botSequenceRef.current.includes(pad.id)
-                    }
-                })
-            });
-            */
         } else stopSequenceLoop()
     }
 
@@ -134,16 +110,23 @@ export default function App() {
         sequenceIntervalId.current = intervalId
     }
 
+    const botSequenceElements = botSequenceRef.current.map((padId, i) => {
+        // TODO: trigger re-render here. move to above generateBotSequence? or use some sort of state or useEffect. need to think
+        return (<li key={i}>
+                    {i == (botSequenceRef.current.length - 1) ? padId : 'X'}
+                </li>)
+    })
+
     return (
-        <>
+        <div id="App" className="flex max-h-screen flex-col max-w-[80%] mx-auto items-center">
             <nav>Placeholder nav</nav>
-            <main className="grid grid-cols-2 gap-8 justify-evenly">
-                <Board boardType="bot" board={botBoard} />
+            <ul></ul>
+            <main className="flex flex-col gap-4 justify-evenly">
                 <Board boardType="player" board={playerBoard} padClick={handlePlayerClick}/>
                 <button className="btn btn-primary"
                 onClick={botSequenceLoop}>New game</button>
             </main>
-        </>
+        </div>
     )
     /* TODO: 
         * create navbar w/ proj title, github link & dark mode

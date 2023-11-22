@@ -27,7 +27,7 @@ export default function Board(props) {
     }
 
     return (
-        <div id={props.id} className="board grid 
+        <div id={props.id} className="Board grid 
         bg-base-300
         aspect-square
         grid-rows-[repeat(3,minmax(30%,150px))] 
