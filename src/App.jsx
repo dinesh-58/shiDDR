@@ -27,8 +27,8 @@ export default function App() {
     const [botSequenceState, setBotSequenceState] = useState([])
     const [score, setScore] = useState(0)
     const [lives, setLives] = useState(3)
-    const [GAME_IDLE, GAME_RUNNING, GAME_OVER] = [0,1,2]
-    const [gameState, setGameState] = useState(GAME_IDLE)
+    const [GAME_INITIAL, GAME_RUNNING, GAME_OVER] = [0,1,2]
+    const [gameState, setGameState] = useState(GAME_INITIAL)
 
     /* ref is used to store latest Board state. 
         * this is because setInterval will use initial value of botBoard and pass that to functions called by it
@@ -149,7 +149,7 @@ export default function App() {
             <main className="flex flex-col gap-4 justify-evenly">
                 <Board boardType="player" board={playerBoard} padClick={handlePlayerClick}/>
             </main>
-            {gameState == GAME_IDLE && <Modal id="modal-game-idle" description="hello" btnText="Start" btnHandler={botSequenceLoop} />}
+            {gameState == GAME_INITIAL && <Modal id="modal-game-idle" description="hello" btnText="Start" btnHandler={botSequenceLoop} />}
             {gameState == GAME_OVER && <Modal id="modal-game-over" description="Game Over" btnText="Replay" btnHandler={botSequenceLoop} />}
         </div>
     )
