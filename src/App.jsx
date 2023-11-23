@@ -3,6 +3,9 @@ import Board from './components/Board.jsx'
 import Modal from './components/Modal.jsx'
 import './App.css'
 
+const [GAME_INITIAL, GAME_RUNNING, GAME_OVER] = [0,1,2]
+const INTERVAL_TIME_MS = 1500;
+
 export default function App() {
     /* NOTE: 
         * Pad refers to the squares that change color
@@ -27,7 +30,6 @@ export default function App() {
     const [botSequenceState, setBotSequenceState] = useState([])
     const [score, setScore] = useState(0)
     const [lives, setLives] = useState(3)
-    const [GAME_INITIAL, GAME_RUNNING, GAME_OVER] = [0,1,2]
     const [gameState, setGameState] = useState(GAME_INITIAL)
 
     /* ref is used to store latest Board state. 
@@ -122,7 +124,7 @@ export default function App() {
 
         // generates new sequence every second. 
         // setInterval returns id which is used to stop loop (using clearInteral) in generateBotSequence
-        const intervalId = setInterval(generateBotSequence, 1500);  
+        const intervalId = setInterval(generateBotSequence, INTERVAL_TIME_MS);  
         console.log("intervalId: " + intervalId)
         sequenceIntervalId.current = intervalId
     }
@@ -134,6 +136,22 @@ export default function App() {
             </li>
         )
     })
+
+    const tutorialElements = (
+        <>
+            <h4>How to Play?</h4>
+            <ul>
+                <li>You have a board with 9 pads that you can click</li>
+                <li>Every {(INTERVAL_TIME_MS / 1000).toFixed(2)} seconds, a random number is generated.</li>
+                <li>You have to click the pad corresponding to it (1st pad corresponds to 1)</li>
+                <li><b>Sequence</b> will show the numbers yet to be clicked.</li> 
+                <li>Only the latest number is shown, the rest are hidden</li>
+                <li>If sequence reaches 5 numbers, it's game over</li>
+                <li>You get 3 lives. Each mis-click will reduce a life</li>
+                <li>GLHF :)</li>
+            </ul>
+        </>
+    )
 
     return (
         <div id="App" className="flex max-h-screen flex-col max-w-[80%] sm:max-w-[480px] mx-auto items-center">
@@ -149,8 +167,8 @@ export default function App() {
             <main className="flex flex-col gap-4 justify-evenly">
                 <Board boardType="player" board={playerBoard} padClick={handlePlayerClick}/>
             </main>
-            {gameState == GAME_INITIAL && <Modal id="modal-game-idle" description="hello" btnText="Start" btnHandler={botSequenceLoop} />}
-            {gameState == GAME_OVER && <Modal id="modal-game-over" description="Game Over" btnText="Replay" btnHandler={botSequenceLoop} />}
+            {gameState == GAME_INITIAL && <Modal id="modal-game-idle" description={tutorialElements} btnText="Start" btnHandler={botSequenceLoop} />}
+            {gameState == GAME_OVER && <Modal id="modal-game-over" description={`Game Over. Your score was ${score}`} btnText="Replay" btnHandler={botSequenceLoop} />}
         </div>
     )
     /* TODO: 
