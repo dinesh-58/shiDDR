@@ -47,7 +47,6 @@ export default function App() {
             setGameState(GAME_OVER);
             stopSequenceLoop();
         }
-        // TODO: use game over state or create reusable function to stop game
     }, [lives])
 
     useEffect(() => {
@@ -99,7 +98,6 @@ export default function App() {
 
             botSequenceRef.current.push(selectedId);
             setBotSequenceState([...botSequenceRef.current]) // this is just to cause rerender and show new numbers in DOM
-            console.log("botSequenceRef: ", [...botSequenceRef.current])  // TODO: remove this log later.
         } else {
             setGameState(GAME_OVER)
             stopSequenceLoop()
@@ -155,7 +153,10 @@ export default function App() {
 
     return (
         <div id="App" className="flex max-h-screen flex-col max-w-[80%] sm:max-w-[480px] mx-auto items-center">
-            <nav>Placeholder nav</nav>
+            <nav className="py-4 flex justify-around self-start gap-4">
+                <a className="btn btn-outline btn-primary" href="https://gurungsujal.com.np/">Home</a>
+                <a className="btn btn-outline btn-secondary" href="https://github.com/dinesh-58/shiDDR">Source Code</a>
+            </nav>
             <div className="flex justify-between w-full">
                 <h3>Score: {score}</h3>
                 <h3>Lives: {lives}</h3>
