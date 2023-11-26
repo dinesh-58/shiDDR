@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 import Board from './components/Board.jsx'
 import Modal from './components/Modal.jsx'
 import './App.css'
@@ -31,6 +32,8 @@ export default function App() {
     const [score, setScore] = useState(0)
     const [lives, setLives] = useState(3)
     const [gameState, setGameState] = useState(GAME_INITIAL)
+    const [animationParent] = useAutoAnimate()
+
 
     /* ref is used to store latest Board state. 
         * this is because setInterval will use initial value of botBoard and pass that to functions called by it
@@ -161,7 +164,7 @@ export default function App() {
                 <h3>Score: {score}</h3>
                 <h3>Lives: {lives}</h3>
             </div>
-            <ul className="flex self-start h-8 w-1/3 gap-4 [&>*]:block">
+            <ul ref={animationParent} className="flex self-start h-8 w-1/3 gap-4 [&>*]:block">
                 <span>Sequence: </span>
                 {botSequenceElements}
             </ul>
