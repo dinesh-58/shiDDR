@@ -157,7 +157,7 @@ export default function App() {
 
     return (
         <div id="App" className="flex max-h-screen flex-col max-w-[80%] sm:max-w-[480px] mx-auto items-center">
-            <nav className="py-4 flex justify-around self-start gap-4">
+            <nav className="py-4 flex justify-around self-start gap-4 items-center">
                 <a className="btn btn-outline btn-primary" href="https://gurungsujal.com.np/">Home</a>
                 <a className="btn btn-outline btn-secondary" href="https://github.com/dinesh-58/shiDDR">Source Code</a>
                 <ThemeController />
