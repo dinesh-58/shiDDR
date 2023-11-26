@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import Board from './components/Board.jsx'
 import Modal from './components/Modal.jsx'
+import ThemeController from './components/ThemeController.jsx'
 import './App.css'
 
 const [GAME_INITIAL, GAME_RUNNING, GAME_OVER] = [0,1,2]
@@ -159,6 +160,7 @@ export default function App() {
             <nav className="py-4 flex justify-around self-start gap-4">
                 <a className="btn btn-outline btn-primary" href="https://gurungsujal.com.np/">Home</a>
                 <a className="btn btn-outline btn-secondary" href="https://github.com/dinesh-58/shiDDR">Source Code</a>
+                <ThemeController />
             </nav>
             <div className="flex justify-between w-full">
                 <h3>Score: {score}</h3>
